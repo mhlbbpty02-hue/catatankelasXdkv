@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KelasHub - Portal Kelas Modern</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { font-family: 'Poppins', sans-serif; margin: 0; padding: 0; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #333; min-height: 100vh; overflow-x: hidden; }
+        header { background: rgba(255,255,255,0.95); color: #333; text-align: center; padding: 40px 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); animation: fadeIn 1s; }
+        nav { background: #333; padding: 15px; text-align: center; position: sticky; top: 0; z-index: 10; }
+        nav a { color: white; margin: 0 20px; text-decoration: none; font-weight: 600; transition: all 0.3s; padding: 10px; border-radius: 5px; }
+        nav a:hover { background: #ffd700; color: #333; transform: scale(1.05); }
+        .container { max-width: 1000px; margin: 20px auto; padding: 20px; background: white; border-radius: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); animation: slideUp 0.8s; }
+        .card { background: #f9f9f9; padding: 20px; margin: 15px 0; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: transform 0.3s; }
+        .card:hover { transform: translateY(-5px); }
+        h2 { color: #667eea; text-align: center; margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; border-radius: 10px; overflow: hidden; }
+        table th, table td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        table th { background: #667eea; color: white; font-weight: 600; }
+        table tr:nth-child(even) { background: #f2f2f2; }
+        form { margin-top: 20px; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+        input, select, button { padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-family: 'Poppins'; transition: all 0.3s; }
+        input:focus, select:focus { border-color: #667eea; box-shadow: 0 0 5px rgba(102,126,234,0.5); }
+        button { background: #667eea; color: white; cursor: pointer; font-weight: 600; }
+        button:hover { background: #5a67d8; transform: scale(1.05); }
+        .hidden { display: none; }
+        .admin-only { background: #ffeaa7; padding: 15px; border-radius: 10px; margin: 15px 0; border-left: 5px solid #ffa726; }
+        .login-form { text-align: center; margin: 50px auto; max-width: 400px; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+        .logout { position: fixed; top: 20px; right: 20px; background: #e74c3c; color: white; padding: 10px 15px; border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.3s; z-index: 20; }
+        .logout:hover { background: #c0392b; transform: scale(1.1); }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    </style>
+</head>
+<body>
+    <header>
+        <h1><i class="fas fa-school"></i> KelasHub</h1>
+        <p>Portal Kelas Modern untuk Biodata, Absensi, dan Kas</p>
+    </header>
+    <div id="login-page" class="container">
+        <div class="login-form">
+            <h2>Login ke KelasHub</h2>
+            <form id="login-form">
+                <input type="text" id="username" placeholder="Nama Anda (e.g., Labib)" required>
+                <input type="password" id="password" placeholder="Password (Admin saja)">
+                <button type="submit"><i class="fas fa-sign-in-alt"></i> Login</button>
+            </form>
+            <p id="login-error" style="color: red; display: none;">Nama atau password salah!</p>
+        </div>
+    </div>
+    <div id="main-content" class="hidden">
+        <nav>
+            <a href="#biodata" onclick="showPage('biodata')"><i class="fas fa-users"></i> Biodata Kelas</a>
+            <a href="#absensi" onclick="showPage('absensi')"><i class="fas fa-calendar-check"></i> Absensi</a>
+            <a href="#kas" onclick="showPage('kas')"><i class="fas fa-money-bill-wave"></i> Kas Kelas</a>
+            <a href="#admin" onclick="showPage('admin')" id="admin-link" class="hidden"><i class="fas fa-cog"></i> Admin Panel</a>
+        </nav>
+        <a href="#" onclick="logout()" class="logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        <div id="biodata" class="container">
+            <h2>Biodata Kelas</h2>
+            <div class="card">
+                <p><strong>Ketua Kelas:</strong> Labib</p>
+                <p><strong>Wakil Kelas:</strong> Ulum</p>
+                <p><strong>Sekretaris:</strong> Azizah</p>
+                <p><strong>Bendahara:</strong> Enjel</p>
+                <p><strong>Wali Kelas:</strong> Pak Wafi</p>
+            </div>
+            <h3>Daftar Anggota</h3>
+            <table>
+                <thead>
+                    <tr><th>No</th><th>Nama</th><th>Jabatan</th></tr>
+                </thead>
+                <tbody id="anggota-list">
+                    <tr><td>1</td><td>Labib</td><td>Ketua Kelas</td></tr>
+                    <tr><td>2</td><td>Ulum</td><td>Wakil Ketua</td></tr>
+                    <tr><td>3</td><td>Azizah</td><td>Sekretaris</td></tr>
+                    <tr><td>4</td><td>Enjel</td><td>Bendahara</td></tr>
+                    <tr><td>5</td><td>Naura</td><td>Anggota</td></tr>
+                    <tr><td>6</td><td>Reva</td><td>Anggota</td></tr>
+                </tbody>
+            </table>
+            <div id="edit-biodata" class="admin-only hidden">
+                <form id="add-anggota">
+                    <input type="text" id="nama-anggota" placeholder="Nama Anggota" required>
+                    <input type="text" id="jabatan-anggota" placeholder="Jabatan" required>
+                    <button type="submit"><i class="fas fa-plus"></i> Tambah Anggota</button>
+                </form>
+            </div>
+        </div>
+        <div id="absensi" class="container hidden">
+            <h2>Absensi</h2>
+            <div id="view-absensi">
+                <table>
+                    <thead>
+                        <tr><th>Tanggal</th><th>Nama</th><th>Status</th></tr>
+                    </thead>
+                    <tbody id="absensi-list"></tbody>
+                </table>
+            </div>
+            <div id="edit-absensi" class="admin-only hidden">
+                <form id="absensi-form">
+                    <input type="date" id="tanggal-absensi" required>
+                    <input type="text" id="nama-absensi" placeholder="Nama Siswa" required>
+                    <select id="status-absensi">
+                        <option value="Hadir">Hadir</option>
+                        <option value="Tidak Hadir">Tidak Hadir</option>
+                    </select>
+                    <button type="submit"><i class="fas fa-save"></i> Catat Absensi</button>
+                </form>
+                <button onclick="generateRekapan()" style="margin-top: 10px;"><i class="fas fa-file-export"></i> Generate Rekapan (Kirim ke Pak Wafi)</button>
+            </div>
+        </div>
+        <div id="kas" class="container hidden">
+            <h2>Kas Kelas</h2>
+            <p>Iuran dilakukan setiap Sabtu dan Selasa.</p>
+            <div id="view-kas">
+                <table>
+                    <thead>
+                        <tr><th>Tanggal</th><th>Nama</th><th>Status</th><th>Jumlah</th></tr>
+                </thead>
+                    <tbody id="kas-list"></tbody>
+                </table>
+                <p style="text-align: center; font-weight: 600; color: #667eea;"><strong>Total Kas:</strong> Rp <span id="total-kas">0</span></p>
+            </div>
+            <div id="edit-kas" class="admin-only hidden">
+                <form id="kas-form">
+                    <input type="date" id="tanggal-kas" required>
+                    <input type="text" id="nama-kas" placeholder="Nama Siswa" required>
+                    <select id="status-kas">
+                        <option value="Bayar">Bayar</option>
+                        <option value="Tidak Bayar">Tidak Bayar</option>
+                    </select>
+                    <input type="number" id="jumlah-kas" placeholder="Jumlah (Rp)" min="0" required>
+                    <button type="submit"><i class="fas fa-save"></i> Catat Iuran</button>
+                </form>
+            </div>
+        </div>
+        <div id="admin" class="container hidden">
+            <h2>Admin Panel</h2>
+            <h3>Log Login Murid</h3>
+            <table>
+                <thead>
+                    <tr><th>Nama</th><th>Waktu Login</th></tr>
+                </thead>
+                <tbody id="login-log"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = null;
+        const adminPassword = "labibprasetyo"; // Password admin baru
+        const users = ["Labib", "Ulum", "Azizah", "Enjel", "Naura", "Reva"];
+
+        // Login handler
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const errorMsg = document.getElementById('login-error');
+            errorMsg.style.display = 'none';
+
+            if (username === "Labib" && password === adminPassword) {
+                currentUser = "admin";
+                document.getElementById('admin-link').classList.remove('hidden');
+                showAdminElements();
+                logLogin(username);
+                document.getElementById('login-page').classList.add('hidden');
+                document.getElementById('main-content').classList.remove('hidden');
+                loadData();
+            } else if (users.includes(username) && !password) {
+                currentUser = username;
+                logLogin(username);
+                document.getElementById('login-page').classList.add('hidden');
+                document.getElementById('main-content').classList.remove('hidden');
+                loadData();
+            } else {
+                errorMsg.style.display = 'block';
+            }
+        });
+
+        function logout() {
+            currentUser = null;
+            document.getElementById('main-content').classList.add('hidden');
+            document.getElementById('login-page').classList.remove('hidden');
+            document.getElementById('admin-link').classList.add('hidden');
+        }
+
+        function showAdminElements() {
+            document.querySelectorAll('.admin-only').forEach(el => el.classList.remove('hidden'));
+        }
+
+        function showPage(page) {
+            document.querySelectorAll('.container').forEach(div => div.classList.add('hidden'));
+            document.getElementById(page).classList.remove('hidden');
+        }
+
+        function logLogin(nama) {
+            let logs = JSON.parse(localStorage.getItem('loginLogs') || '[]');
+            logs.push({nama: nama, waktu: new Date().toLocaleString()});
+            localStorage.setItem('loginLogs', JSON.stringify(logs));
+        }
+
+        // Biodata: Tambah anggota (admin only)
+        document.getElementById('add-anggota').addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (currentUser !== "admin") return;
+            const nama = document.getElementById('nama-anggota').value;
+            const jabatan = document.getElementById('jabatan-anggota').value;
+            const list = document.getElementById('anggota-list');
+            const row = list.insertRow();
+            row.insertCell(0).textContent = list.rows.length;
+            row.insertCell(1).textContent = nama;
+            row.insertCell(2).textContent = jabatan;
+            let anggota = JSON.parse(localStorage.getItem('anggota') || '[]');
+            anggota.push({nama, jabatan});
+            localStorage.setItem('anggota', JSON.stringify(anggota));
+            this.reset();
+        });
+
+        // Absensi
+        document.getElementById('absensi-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (currentUser !== "admin") return;
+            const tanggal = document.getElementById('tanggal-absensi').value;
+            const nama = document.getElementById('nama-absensi').value;
+            const status = document.getElementById('status-absensi').value;
+            const list = document.getElementById('absensi-list');
+            const row = list.insertRow();
+            row.insertCell(0).textContent = tanggal;
+            row.insertCell(1).textContent = nama;
+            row.insertCell(2).textContent = status;
+            let absensi = JSON.parse(localStorage.getItem('absensi') || '[]');
+            absensi.push({tanggal, nama, status});
+            localStorage.setItem('absensi', JSON.stringify(absensi));
+            this.reset();
+        });
+
+        function generateRekapan() {
+            const absensi = JSON.parse(localStorage.getItem('absensi') || '[]');
+            let rekapan = 'Rekapan Absensi:\n';
+            absensi.forEach(a => rekapan += `${a.tanggal}: ${a.nama} - ${a.status}\n`);
+            alert('Rekapan siap! Salin dan kirim ke Pak Wafi:\n' + rekapan);
+        }
+
+        // Kas
+        document.getElementById('kas-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (currentUser !== "admin") return;
+            const tanggal = document.getElementById('tanggal-kas').value;
+            const nama = document.getElementById('nama-kas').value;
+            const status = document.getElementById('status-kas').value;
+            const jumlah = parseInt(document.getElementById('jumlah-kas').value) || 0;
+            const list = document.getElementById('kas-list');
+            const row = list.insertRow();
+            row.insertCell(0).textContent = tanggal;
+            row.insertCell(1).textContent = nama;
+            row.insertCell(2).textContent = status;
+            row.insertCell(3).textContent = 'Rp ' + jumlah;
+            let kas = JSON.parse(localStorage.getItem('kas') || '[]');
+            kas.push({tanggal
